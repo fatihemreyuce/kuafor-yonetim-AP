@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { LoginContext } from "@/contexts/login-context";
-import { refreshTokens } from "@/utils/fetch-client";
-import { hasAccessToken, setAccessToken } from "@/utils/token-manager";
+import { supabase } from "@/lib/supabase";
 import { login, logout } from "@/services/auth-services";
 import type { LoginRequest } from "@/types/auth.types";
 import { useQueryClient } from "@tanstack/react-query";
@@ -17,53 +16,35 @@ export interface LoginContextType {
 
 export const LoginProvider = ({ children }: { children: ReactNode }) => {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 	const [isStarted, setIsStarted] = useState(false);
 	const queryClient = useQueryClient();
 
-	const effectRan = useRef(false);
-
 	const isActionable = isStarted && !isLoading;
 
-	const setTimer = useCallback(() => {
-		const timer = setTimeout(async () => {
-			await refreshTokens();
-		}, 1000 * 60 * 12);
-
-		return () => clearTimeout(timer);
-	}, []);
-
 	useEffect(() => {
-		setIsStarted(true);
-		if (effectRan.current) return;
-		effectRan.current = true;
-
-		const refreshTokenFn = async () => {
-			setIsLoading(true);
-
-			await refreshTokens();
-			const isLoggedIn = hasAccessToken();
-
-			setIsLoggedIn(isLoggedIn);
-
-			if (isLoggedIn) {
-				setTimer();
-			}
-
+		// Mevcut session'ı kontrol et
+		supabase.auth.getSession().then(({ data: { session } }) => {
+			setIsLoggedIn(!!session);
 			setIsLoading(false);
-		};
+			setIsStarted(true);
+		});
 
-		refreshTokenFn();
-	}, [setTimer]);
+		// Auth değişikliklerini dinle (token yenileme, oturum kapatma vb.)
+		const {
+			data: { subscription },
+		} = supabase.auth.onAuthStateChange((_event, session) => {
+			setIsLoggedIn(!!session);
+		});
+
+		return () => subscription.unsubscribe();
+	}, []);
 
 	const handleLogout = async () => {
 		setIsLoading(true);
 		try {
 			await logout();
-
-			setAccessToken(null);
 			setIsLoggedIn(false);
-
 			queryClient.removeQueries();
 		} finally {
 			setIsLoading(false);
@@ -73,18 +54,10 @@ export const LoginProvider = ({ children }: { children: ReactNode }) => {
 	const handleLogin = async (request: LoginRequest) => {
 		setIsLoading(true);
 		try {
-			const response = await login(request);
-			if (response.accessToken) {
-				setAccessToken(response.accessToken);
-				setIsLoggedIn(true);
-
-				await queryClient.invalidateQueries({ queryKey: ["me"] });
-			} else {
-				setAccessToken(null);
-				setIsLoggedIn(false);
-			}
+			await login(request);
+			setIsLoggedIn(true);
+			await queryClient.invalidateQueries({ queryKey: ["me"] });
 		} catch (error) {
-			setAccessToken(null);
 			setIsLoggedIn(false);
 			throw error;
 		} finally {

@@ -3,21 +3,14 @@ export interface LoginRequest {
 	password: string;
 }
 
-export interface LoginResponse {
-	accessToken: string;
-	refreshToken: string;
-}
-
 export interface RegisterRequest {
 	email: string;
 	password: string;
 }
 
 export interface User {
-	id: number;
-	username: string;
+	id: string;
 	email: string;
-	active: boolean;
 	createdAt: string;
 	updatedAt: string;
 }

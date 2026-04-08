@@ -1,5 +1,5 @@
+import { supabase } from "@/lib/supabase";
 import { objectToFormData } from "./object-to-form-data";
-import { getAccessToken, setAccessToken } from "./token-manager";
 
 export const fetchClient = async <T, U>(
   url: string,
@@ -7,21 +7,23 @@ export const fetchClient = async <T, U>(
 ): Promise<U> => {
   const headers = new Headers(options.headers);
   const { body, ...rest } = options;
-
   const requestOptions: RequestInit = rest;
-  const locale = window.location.pathname.split("/")[1];
+
+  // Supabase session'dan token al
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  const accessToken = session?.access_token;
 
   headers.set("Accept", "application/json");
   headers.set("X-Client-Type", "web");
-  headers.set("X-Locale", locale);
-  const accessToken = getAccessToken();
+  headers.set("X-Client-Version", import.meta.env.VITE_APP_VERSION || "1.0.0");
+
   if (accessToken) {
     headers.set("Authorization", `Bearer ${accessToken}`);
   }
-  headers.set("X-Client-Version", import.meta.env.VITE_APP_VERSION || "1.0.0");
-  headers.set("bypass-tunnel-reminder", "true");
 
-  if (options?.method?.toUpperCase() === undefined) {
+  if (!options.method) {
     requestOptions.method = "GET";
   }
 
@@ -61,19 +63,20 @@ export const fetchClient = async <T, U>(
 
   requestOptions.headers = headers;
 
-  const requestUrl = `/api/v1${url}`;
+  const response = await fetch(url, requestOptions);
 
-  const response = await fetch(requestUrl, requestOptions);
-
-  if (response.status < 200 || response.status >= 400) {
-    if (response.status === 401) {
-      const isRefreshed = await refreshTokens();
-      if (!isRefreshed) {
-        throw new Error("Failed to fetch data");
-      }
+  if (response.status === 401) {
+    // Supabase session'ı yenile ve tekrar dene
+    const {
+      data: { session: newSession },
+    } = await supabase.auth.refreshSession();
+    if (newSession) {
       return fetchClient(url, options);
     }
+    throw new Error("Unauthorized");
+  }
 
+  if (response.status < 200 || response.status >= 400) {
     throw new Error("Failed to fetch data");
   }
 
@@ -83,25 +86,4 @@ export const fetchClient = async <T, U>(
   }
 
   return response as unknown as Promise<U>;
-};
-
-export const refreshTokens = async (): Promise<boolean> => {
-  const tokensResponse = await fetch("/api/v1/auth/refresh", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "bypass-tunnel-reminder": "true",
-    },
-    credentials: "include",
-  });
-
-  if (tokensResponse.status === 200) {
-    const tokens = await tokensResponse.json();
-    setAccessToken(tokens.accessToken);
-    return true;
-  }
-
-  setAccessToken(null);
-
-  return false;
 };

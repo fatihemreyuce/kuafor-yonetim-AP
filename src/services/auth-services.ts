@@ -1,16 +1,16 @@
-import type { LoginRequest, LoginResponse } from "@/types/auth.types";
-import { fetchClient } from "../utils/fetch-client";
+import { supabase } from "@/lib/supabase";
+import type { LoginRequest } from "@/types/auth.types";
 
-export const login = async (request: LoginRequest) => {
-  return await fetchClient<LoginRequest, LoginResponse>("/auth/login", {
-    method: "POST",
-    body: request,
+export const login = async ({ email, password }: LoginRequest) => {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
   });
+  if (error) throw error;
+  return data;
 };
 
 export const logout = async () => {
-  return await fetchClient("/auth/logout", {
-    method: "POST",
-  });
+  const { error } = await supabase.auth.signOut();
+  if (error) throw error;
 };
-
