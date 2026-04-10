@@ -1,4 +1,4 @@
-import { LoginProvider } from "./providers/login-state-provider";
+﻿import { LoginProvider } from "./providers/login-state-provider";
 import QueryProvider from "./providers/query-client-provider";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster } from "./components/ui/sonner";
@@ -21,6 +21,11 @@ import RevenueSummaryPage from "./pages/revenue-summary/revenue-summary-page";
 import RevenueSummaryCreatePage from "./pages/revenue-summary/revenue-summary-create-page";
 import RevenueSummaryEditPage from "./pages/revenue-summary/revenue-summary-edit-page";
 import RevenueSummaryDetailPage from "./pages/revenue-summary/revenue-summary-detail-page";
+import SalonTeamLayout from "./pages/salon-team/salon-team-layout";
+import SalonTeamPage from "./pages/salon-team/salon-team-page";
+import SalonTeamCreatePage from "./pages/salon-team/salon-team-create-page";
+import SalonTeamEditPage from "./pages/salon-team/salon-team-edit-page";
+import SalonTeamDetailPage from "./pages/salon-team/salon-team-detail-page";
 
 function App() {
 	return (
@@ -50,6 +55,12 @@ function App() {
 									<Route path="new" element={<RevenueSummaryCreatePage />} />
 									<Route path=":id/edit" element={<RevenueSummaryEditPage />} />
 									<Route path=":id" element={<RevenueSummaryDetailPage />} />
+								</Route>
+								<Route path="salon-team" element={<SalonTeamLayout />}>
+									<Route index element={<SalonTeamPage />} />
+									<Route path="new" element={<SalonTeamCreatePage />} />
+									<Route path=":id/edit" element={<SalonTeamEditPage />} />
+									<Route path=":id" element={<SalonTeamDetailPage />} />
 								</Route>
 							</Route>
 						</Route>

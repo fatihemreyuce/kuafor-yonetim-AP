@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+﻿import { useCallback, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   BarChart3,
@@ -9,6 +9,7 @@ import {
   Puzzle,
   Sparkles,
   Users,
+  UserRoundCog,
 } from "lucide-react";
 
 import { AnimatedGradientText } from "@/components/ui/animated-gradient-text";
@@ -41,13 +42,13 @@ interface NavItem {
 const navigationItems: NavItem[] = [
   {
     to: "/",
-    label: "Gösterge Paneli",
+    label: "Gosterge Paneli",
     icon: LayoutDashboard,
     end: true,
   },
   {
     to: "/profiles",
-    label: "Kullanıcılar",
+    label: "Kullanicilar",
     icon: Users,
   },
   {
@@ -59,6 +60,11 @@ const navigationItems: NavItem[] = [
     to: "/revenue-summary",
     label: "Gelir Ozeti",
     icon: BarChart3,
+  },
+  {
+    to: "/salon-team",
+    label: "Salon Team",
+    icon: UserRoundCog,
   },
 ];
 
@@ -248,7 +254,7 @@ export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) 
                 onClick={() => onCollapsedChange(!collapsed)}
                 aria-expanded={!collapsed}
                 aria-label={
-                  collapsed ? "Kenar çubuğunu genişlet" : "Kenar çubuğunu daralt"
+                  collapsed ? "Kenar Ã§ubuÄŸunu geniÅŸlet" : "Kenar Ã§ubuÄŸunu daralt"
                 }
               >
                 {collapsed ? (
@@ -259,12 +265,12 @@ export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) 
               </Button>
             </TooltipTrigger>
             <TooltipContent side="right" sideOffset={8}>
-              {collapsed ? "Menüyü genişlet" : "Menüyü daralt"}
+              {collapsed ? "MenÃ¼yÃ¼ geniÅŸlet" : "MenÃ¼yÃ¼ daralt"}
             </TooltipContent>
           </Tooltip>
         </div>
 
-        {/* Brand — dar modda kart yok, daha hafif */}
+        {/* Brand â€” dar modda kart yok, daha hafif */}
         {collapsed ? (
           <div className="flex flex-col items-center gap-1 px-1 pb-0.5 pt-0.5">
             <div
@@ -275,7 +281,7 @@ export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) 
                 <Sparkles className="h-3.5 w-3.5 text-white" strokeWidth={2} />
               </div>
             </div>
-            <WithTooltip collapsed label="Tema değiştir">
+            <WithTooltip collapsed label="Tema deÄŸiÅŸtir">
               <DarkModeToggle className="h-7 w-7 rounded-md [&_svg]:h-3.5 [&_svg]:w-3.5" />
             </WithTooltip>
           </div>
@@ -301,7 +307,7 @@ export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) 
                 <div className="min-w-0 flex-1 pt-0.5">
                   <p className="truncate text-sm font-semibold leading-tight">
                     <AnimatedGradientText className="text-sm font-semibold">
-                      Kuafor Yönetim Sistemi
+                      Kuafor YÃ¶netim Sistemi
                     </AnimatedGradientText>
                   </p>
                   <p className="mt-px text-[11px] leading-tight text-muted-foreground">
@@ -320,7 +326,7 @@ export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) 
             "min-h-0 flex-1 space-y-1 overflow-y-auto py-2 [perspective:800px]",
             collapsed ? "px-1 py-1.5" : "px-3 py-2",
           )}
-          aria-label="Ana menü"
+          aria-label="Ana menÃ¼"
         >
           {navigationItems.map((item) => (
             <TiltNavLink
@@ -342,7 +348,7 @@ export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) 
           )}
         >
           {isLoading ? (
-            <WithTooltip collapsed={collapsed} label="Çıkış yapılıyor…">
+            <WithTooltip collapsed={collapsed} label="Ã‡Ä±kÄ±ÅŸ yapÄ±lÄ±yorâ€¦">
               <Button
                 variant="outline"
                 disabled
@@ -360,12 +366,12 @@ export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) 
                   )}
                 />
                 {!collapsed ? (
-                  <span>Çıkış yapılıyor…</span>
+                  <span>Ã‡Ä±kÄ±ÅŸ yapÄ±lÄ±yorâ€¦</span>
                 ) : null}
               </Button>
             </WithTooltip>
           ) : (
-            <WithTooltip collapsed={collapsed} label="Çıkış Yap">
+            <WithTooltip collapsed={collapsed} label="Ã‡Ä±kÄ±ÅŸ Yap">
               <ShimmerButton
                 type="button"
                 onClick={handleLogout}
@@ -386,7 +392,7 @@ export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) 
                     collapsed ? "h-3 w-3" : "h-3.5 w-3.5",
                   )}
                 />
-                {!collapsed ? <span>Çıkış Yap</span> : null}
+                {!collapsed ? <span>Ã‡Ä±kÄ±ÅŸ Yap</span> : null}
               </ShimmerButton>
             </WithTooltip>
           )}
@@ -395,3 +401,6 @@ export default function Sidebar({ collapsed, onCollapsedChange }: SidebarProps) 
     </aside>
   );
 }
+
+
+
