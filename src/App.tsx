@@ -6,7 +6,16 @@ import ProtectedRoute from "./providers/protected-route";
 import AdminLayout from "./components/admin-layout";
 import LoginPage from "./pages/login/login-page";
 import DashboardPage from "./pages/dashboard/dashboard-page";
-
+import ProfilesLayout from "./pages/profiles/profiles-layout";
+import ProfilesPage from "./pages/profiles/profiles-page";
+import ProfileCreatePage from "./pages/profiles/profile-create-page";
+import ProfileDetailPage from "./pages/profiles/profile-detail-page";
+import ProfileEditPage from "./pages/profiles/profile-edit-page";
+import AddonsLayout from "./pages/addons/addons-layout";
+import AddonsPage from "./pages/addons/addons-page";
+import AddonCreatePage from "./pages/addons/addon-create-page";
+import AddonEditPage from "./pages/addons/addon-edit-page";
+import AddonDetailPage from "./pages/addons/addon-detail-page";
 
 function App() {
 	return (
@@ -18,7 +27,19 @@ function App() {
 						<Route path="/login" element={<LoginPage />} />
 						<Route path="/" element={<ProtectedRoute />}>
 							<Route path="/" element={<AdminLayout />}>
-								<Route path="/" element={<DashboardPage />} />
+								<Route index element={<DashboardPage />} />
+								<Route path="profiles" element={<ProfilesLayout />}>
+									<Route index element={<ProfilesPage />} />
+									<Route path="new" element={<ProfileCreatePage />} />
+									<Route path=":id/edit" element={<ProfileEditPage />} />
+									<Route path=":id" element={<ProfileDetailPage />} />
+								</Route>
+								<Route path="saloons" element={<AddonsLayout />}>
+									<Route index element={<AddonsPage />} />
+									<Route path="new" element={<AddonCreatePage />} />
+									<Route path=":id/edit" element={<AddonEditPage />} />
+									<Route path=":id" element={<AddonDetailPage />} />
+								</Route>
 							</Route>
 						</Route>
 					</Routes>

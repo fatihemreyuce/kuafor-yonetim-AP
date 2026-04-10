@@ -5,7 +5,9 @@ import {
   ChevronRight,
   LayoutDashboard,
   LogOut,
+  Puzzle,
   Sparkles,
+  Users,
 } from "lucide-react";
 
 import { AnimatedGradientText } from "@/components/ui/animated-gradient-text";
@@ -41,6 +43,16 @@ const navigationItems: NavItem[] = [
     label: "Gösterge Paneli",
     icon: LayoutDashboard,
     end: true,
+  },
+  {
+    to: "/profiles",
+    label: "Kullanıcılar",
+    icon: Users,
+  },
+  {
+    to: "/saloons",
+    label: "Saloons",
+    icon: Puzzle,
   },
 ];
 
