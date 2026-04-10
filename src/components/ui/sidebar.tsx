@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
+  BarChart3,
   ChevronLeft,
   ChevronRight,
   LayoutDashboard,
@@ -53,6 +54,11 @@ const navigationItems: NavItem[] = [
     to: "/saloons",
     label: "Saloons",
     icon: Puzzle,
+  },
+  {
+    to: "/revenue-summary",
+    label: "Gelir Ozeti",
+    icon: BarChart3,
   },
 ];
 

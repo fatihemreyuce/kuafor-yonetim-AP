@@ -16,6 +16,11 @@ import AddonsPage from "./pages/addons/addons-page";
 import AddonCreatePage from "./pages/addons/addon-create-page";
 import AddonEditPage from "./pages/addons/addon-edit-page";
 import AddonDetailPage from "./pages/addons/addon-detail-page";
+import RevenueSummaryLayout from "./pages/revenue-summary/revenue-summary-layout";
+import RevenueSummaryPage from "./pages/revenue-summary/revenue-summary-page";
+import RevenueSummaryCreatePage from "./pages/revenue-summary/revenue-summary-create-page";
+import RevenueSummaryEditPage from "./pages/revenue-summary/revenue-summary-edit-page";
+import RevenueSummaryDetailPage from "./pages/revenue-summary/revenue-summary-detail-page";
 
 function App() {
 	return (
@@ -39,6 +44,12 @@ function App() {
 									<Route path="new" element={<AddonCreatePage />} />
 									<Route path=":id/edit" element={<AddonEditPage />} />
 									<Route path=":id" element={<AddonDetailPage />} />
+								</Route>
+								<Route path="revenue-summary" element={<RevenueSummaryLayout />}>
+									<Route index element={<RevenueSummaryPage />} />
+									<Route path="new" element={<RevenueSummaryCreatePage />} />
+									<Route path=":id/edit" element={<RevenueSummaryEditPage />} />
+									<Route path=":id" element={<RevenueSummaryDetailPage />} />
 								</Route>
 							</Route>
 						</Route>
